@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXITLAG | Admin Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ADMIN DASHBOARD -->
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <img src="assets/White.png" alt="EXITLAG">
+                <span class="admin-badge">ADMIN</span>
+            </div>
+
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <div class="nav-item active" onclick="showTab('overview', this)">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </div>
+                    <div class="nav-item" onclick="showTab('creators', this)">
+                        <i class="fas fa-users"></i> Creators
+                    </div>
+                    <div class="nav-item" onclick="showTab('campaigns', this)">
+                        <i class="fas fa-bullhorn"></i> Campaigns
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <div class="nav-item" onclick="showTab('invoices', this)">
+                        <i class="fas fa-file-invoice-dollar"></i> Invoices
+                    </div>
+                    <div class="nav-item" onclick="showTab('analytics', this)">
+                        <i class="fas fa-chart-bar"></i> Analytics
+                    </div>
+                    <div class="nav-item" onclick="showTab('settings', this)">
+                        <i class="fas fa-cog"></i> Settings
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="nav-item" onclick="logout()" style="color: var(--danger);">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+                    <h2 id="page-title">Admin Dashboard</h2>
+                </div>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-name">Admin User</div>
+                        <div class="user-level">Administrator</div>
+                    </div>
+                    <div class="avatar">AU</div>
+                </div>
+            </header>
+
+            <!-- OVERVIEW TAB -->
+            <div id="tab-overview" class="tab-content">
+                <div class="metrics-grid">
+                    <div class="card metric-card">
+                        <div class="metric-label">Total Creators</div>
+                        <div class="metric-value">247</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> +12 this month
+                        </div>
+                    </div>
+                    <div class="card metric-card">
+                        <div class="metric-label">Active Campaigns</div>
+                        <div class="metric-value">18</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-fire"></i> 3 ending soon
+                        </div>
+                    </div>
+                    <div class="card metric-card">
+                        <div class="metric-label">Total Revenue</div>
+                        <div class="metric-value">$124.5K</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> 23% vs last month
+                        </div>
+                    </div>
+                    <div class="card metric-card">
+                        <div class="metric-label">Pending Invoices</div>
+                        <div class="metric-value">7</div>
+                        <div class="metric-trend trend-down" style="color: var(--warning);">
+                            <i class="fas fa-exclamation-circle"></i> Requires attention
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+                    <div class="card">
+                        <h3>Revenue Overview (Last 6 Months)</h3>
+                        <canvas id="revenueChart" style="max-height: 280px; margin-top: 15px;"></canvas>
+                    </div>
+
+                    <div class="card">
+                        <h3>Quick Actions</h3>
+                        <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                            <button class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-plus"></i> Create Campaign
+                            </button>
+                            <button class="btn btn-outline" style="width: 100%;">
+                                <i class="fas fa-user-plus"></i> Add Creator
+                            </button>
+                            <button class="btn btn-outline" style="width: 100%;">
+                                <i class="fas fa-file-export"></i> Export Report
+                            </button>
+                        </div>
+
+                        <h3 style="margin-top: 2rem;">Recent Activity</h3>
+                        <div style="margin-top: 1rem;">
+                            <div class="activity-item">
+                                <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 0.9rem;">Invoice #INV-004 approved</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <i class="fas fa-user-plus" style="color: var(--accent);"></i>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 0.9rem;">New creator registered</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">5 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <i class="fas fa-bullhorn" style="color: var(--warning);"></i>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 0.9rem;">Campaign "Cyber Energy" launched</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">1 day ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CREATORS TAB -->
+            <div id="tab-creators" class="tab-content hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <input type="text" class="form-input" placeholder="Search creators..." style="width: 300px;">
+                        <select class="form-input" style="width: 150px;">
+                            <option>All Levels</option>
+                            <option>Elite</option>
+                            <option>Pro</option>
+                            <option>Beginner</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Add Creator
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3>Creator Management</h3>
+                    <div style="overflow-x: auto; margin-top: 1rem;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Creator</th>
+                                    <th>Level</th>
+                                    <th>Campaigns</th>
+                                    <th>Revenue</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div class="avatar" style="width: 36px; height: 36px;">CN</div>
+                                            <div>
+                                                <div style="font-weight: 600;">Creator Name</div>
+                                                <div style="font-size: 0.8rem; color: var(--text-muted);">creator@email.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="level-badge elite">Elite</span></td>
+                                    <td>5</td>
+                                    <td>$12,500</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div class="avatar" style="width: 36px; height: 36px;">JD</div>
+                                            <div>
+                                                <div style="font-weight: 600;">John Doe</div>
+                                                <div style="font-size: 0.8rem; color: var(--text-muted);">john@email.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="level-badge pro">Pro</span></td>
+                                    <td>3</td>
+                                    <td>$8,200</td>
+                                    <td><span class="status-badge status-active">Active</span></td>
+                                    <td>
+                                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 12px;">
+                                            <div class="avatar" style="width: 36px; height: 36px;">SM</div>
+                                            <div>
+                                                <div style="font-weight: 600;">Sarah Miller</div>
+                                                <div style="font-size: 0.8rem; color: var(--text-muted);">sarah@email.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="level-badge beginner">Beginner</span></td>
+                                    <td>1</td>
+                                    <td>$1,500</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAMPAIGNS TAB -->
+            <div id="tab-campaigns" class="tab-content hidden">
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 1.5rem;">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create New Campaign
+                    </button>
+                </div>
+
+                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem;">
+                    <div class="card campaign-card">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">Cyber Energy Drink</h3>
+                                <span class="campaign-badge">Active</span>
+                            </div>
+                            <button class="btn btn-outline" style="padding: 6px 12px;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Promoting new "Neon Berry" flavor to gaming audience.
+                        </p>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                            <span><i class="fas fa-users"></i> 12 Creators</span>
+                            <span><i class="fas fa-calendar"></i> Oct 25, 2024</span>
+                        </div>
+                    </div>
+
+                    <div class="card campaign-card">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">Gaming Headset Launch</h3>
+                                <span class="campaign-badge" style="background: rgba(234, 179, 8, 0.2); color: var(--warning);">Draft</span>
+                            </div>
+                            <button class="btn btn-outline" style="padding: 6px 12px;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                            Product launch campaign for new gaming headset line.
+                        </p>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                            <span><i class="fas fa-users"></i> 8 Creators</span>
+                            <span><i class="fas fa-calendar"></i> Nov 15, 2024</span>
+                        </div>
+                    </div>
+
+                    <div class="card campaign-card">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <h3 style="margin: 0; font-size: 1.1rem;">Holiday Special</h3>
+                                <span class="campaign-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--success);">Completed</span>
+                            </div>
+                            <button class="btn btn-outline" style="padding: 6px 12px;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">
+                            End-of-year promotional campaign.
+                        </p>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted);">
+                            <span><i class="fas fa-users"></i> 20 Creators</span>
+                            <span><i class="fas fa-calendar"></i> Dec 31, 2023</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INVOICES TAB -->
+            <div id="tab-invoices" class="tab-content hidden">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
+                    <div style="display: flex; gap: 1rem;">
+                        <select class="form-input" style="width: 150px;">
+                            <option>All Status</option>
+                            <option>Pending</option>
+                            <option>Approved</option>
+                            <option>Paid</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-file-export"></i> Export All
+                    </button>
+                </div>
+
+                <div class="card">
+                    <h3>Invoice Management</h3>
+                    <div style="overflow-x: auto; margin-top: 1rem;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Creator</th>
+                                    <th>Campaign</th>
+                                    <th>Amount</th>
+                                    <th>Issue Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#INV-004</td>
+                                    <td>Creator Name</td>
+                                    <td>Cyber Energy Launch</td>
+                                    <td>$750.00</td>
+                                    <td>10/10/2024</td>
+                                    <td><span class="status-badge status-waiting">Pending</span></td>
+                                    <td>
+                                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem; margin-right: 4px;">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#INV-003</td>
+                                    <td>John Doe</td>
+                                    <td>Headset Review</td>
+                                    <td>$250.00</td>
+                                    <td>09/01/2024</td>
+                                    <td><span class="status-badge status-paid">Paid</span></td>
+                                    <td>
+                                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.8rem;">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANALYTICS TAB -->
+            <div id="tab-analytics" class="tab-content hidden">
+                <div class="card">
+                    <h3>Platform Analytics</h3>
+                    <canvas id="platformChart" style="max-height: 400px; margin-top: 15px;"></canvas>
+                </div>
+
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+                    <div class="card">
+                        <h3>Top Performing Creators</h3>
+                        <div style="margin-top: 1rem;">
+                            <div class="ranking-item">
+                                <span class="rank-number">1</span>
+                                <div class="avatar" style="width: 40px; height: 40px;">CN</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600;">Creator Name</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">$12,500 revenue</div>
+                                </div>
+                                <span style="color: var(--accent); font-weight: 600;">Elite</span>
+                            </div>
+                            <div class="ranking-item">
+                                <span class="rank-number">2</span>
+                                <div class="avatar" style="width: 40px; height: 40px;">JD</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600;">John Doe</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">$8,200 revenue</div>
+                                </div>
+                                <span style="color: var(--accent); font-weight: 600;">Pro</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Campaign Performance</h3>
+                        <div style="margin-top: 1rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span>Cyber Energy</span>
+                                    <span style="font-weight: 600;">$45,200</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span>Holiday Special</span>
+                                    <span style="font-weight: 600;">$32,100</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS TAB -->
+            <div id="tab-settings" class="tab-content hidden">
+                <div class="card">
+                    <h3>System Settings</h3>
+                    <div class="form-group" style="max-width: 500px; margin-top: 1.5rem;">
+                        <label>Platform Name</label>
+                        <input type="text" class="form-input" value="EXITLAG Creator Platform">
+                    </div>
+                    <div class="form-group" style="max-width: 500px;">
+                        <label>Default Currency</label>
+                        <select class="form-input">
+                            <option>USD - US Dollar</option>
+                            <option>EUR - Euro</option>
+                            <option>BRL - Brazilian Real</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;">Save Changes</button>
+                </div>
+
+                <div class="card">
+                    <h3>User Management</h3>
+                    <div style="margin-top: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; cursor: pointer;">
+                            <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--accent);">
+                            <span>Allow creator self-registration</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; cursor: pointer;">
+                            <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--accent);">
+                            <span>Require email verification</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                            <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--accent);">
+                            <span>Enable two-factor authentication</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
