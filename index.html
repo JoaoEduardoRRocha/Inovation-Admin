@@ -11,11 +11,40 @@
 </head>
 <body>
 
+    <!-- LOGIN SCREEN -->
+    <section id="login-screen">
+        <div class="login-card">
+            <img src="assets/ELITE.png" alt="EXITLAG" class="login-logo">
+            <p>Your Performance & Campaign Center</p>
+            <button class="btn btn-social google" onclick="handleSocialLogin('google')">
+                <i class="fab fa-google"></i> Sign in with Google
+            </button>
+            <button class="btn btn-social discord" onclick="handleSocialLogin('discord')">
+                <i class="fab fa-discord"></i> Sign in with Discord
+            </button>
+            <div class="divider">or sign in with email</div>
+            <form onsubmit="event.preventDefault(); handleEmailLogin();">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="text" id="login-email" class="form-input" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="••••••••">
+                </div>
+                <div style="text-align: right; margin-bottom: 1.5rem;">
+                    <a href="#" style="color: var(--accent); font-size: 0.85rem; text-decoration: none;">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">SIGN IN</button>
+            </form>
+        </div>
+    </section>
+
     <!-- ADMIN DASHBOARD -->
-    <div class="dashboard-container">
+    <div class="dashboard-container hidden" id="dashboard-container">
         <aside class="sidebar" id="sidebar">
             <div class="logo">
-                <img src="assets/White.png" alt="EXITLAG">
+                <img src="assets/ELITE.png" alt="EXITLAG">
                 <span class="admin-badge">ADMIN</span>
             </div>
 
@@ -100,12 +129,26 @@
                             <i class="fas fa-exclamation-circle"></i> Requires attention
                         </div>
                     </div>
+                    <div class="card metric-card">
+                        <div class="metric-label">Total Views</div>
+                        <div class="metric-value">2.4M</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-eye"></i> +18% vs last month
+                        </div>
+                    </div>
+                    <div class="card metric-card">
+                        <div class="metric-label">Conversion Rate</div>
+                        <div class="metric-value">4.2%</div>
+                        <div class="metric-trend trend-up">
+                            <i class="fas fa-chart-line"></i> +0.8% improvement
+                        </div>
+                    </div>
                 </div>
 
                 <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 1.5rem;">
-                    <div class="card">
-                        <h3>Revenue Overview (Last 6 Months)</h3>
-                        <canvas id="revenueChart" style="max-height: 280px; margin-top: 15px;"></canvas>
+                    <div class="card" style="padding: 1.25rem;">
+                        <h3 style="margin-bottom: 0.75rem;">Revenue Overview (Last 6 Months)</h3>
+                        <canvas id="revenueChart" style="max-height: 400px; height: 400px;"></canvas>
                     </div>
 
                     <div class="card">
@@ -141,7 +184,7 @@
                             <div class="activity-item">
                                 <i class="fas fa-bullhorn" style="color: var(--warning);"></i>
                                 <div>
-                                    <div style="font-weight: 600; font-size: 0.9rem;">Campaign "Cyber Energy" launched</div>
+                                    <div style="font-weight: 600; font-size: 0.9rem;">New campaign launched</div>
                                     <div style="font-size: 0.8rem; color: var(--text-muted);">1 day ago</div>
                                 </div>
                             </div>
@@ -260,7 +303,7 @@
                     <div class="card campaign-card">
                         <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                             <div>
-                                <h3 style="margin: 0; font-size: 1.1rem;">Cyber Energy Drink</h3>
+                                <h3 style="margin: 0; font-size: 1.1rem;">Product Launch Campaign</h3>
                                 <span class="campaign-badge">Active</span>
                             </div>
                             <button class="btn btn-outline" style="padding: 6px 12px;">
@@ -351,7 +394,7 @@
                                 <tr>
                                     <td>#INV-004</td>
                                     <td>Creator Name</td>
-                                    <td>Cyber Energy Launch</td>
+                                    <td>Product Launch</td>
                                     <td>$750.00</td>
                                     <td>10/10/2024</td>
                                     <td><span class="status-badge status-waiting">Pending</span></td>
@@ -385,6 +428,91 @@
 
             <!-- ANALYTICS TAB -->
             <div id="tab-analytics" class="tab-content hidden">
+                <div class="card">
+                    <h3>Filters</h3>
+                    <div class="filters-grid" style="margin-top: 1.5rem;">
+                        <div class="form-group">
+                            <label>Creator</label>
+                            <select id="filter-creator" class="form-input">
+                                <option value="">All Creators</option>
+                                <option value="creator1">Creator Name</option>
+                                <option value="creator2">John Doe</option>
+                                <option value="creator3">Sarah Miller</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Game</label>
+                            <select id="filter-game" class="form-input">
+                                <option value="">All Games</option>
+                                <option value="game1">Counter-Strike 2</option>
+                                <option value="game2">Valorant</option>
+                                <option value="game3">League of Legends</option>
+                                <option value="game4">Fortnite</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <select id="filter-country" class="form-input">
+                                <option value="">All Countries</option>
+                                <option value="us">United States</option>
+                                <option value="br">Brazil</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="de">Germany</option>
+                                <option value="fr">France</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Channel</label>
+                            <select id="filter-channel" class="form-input">
+                                <option value="">All Channels</option>
+                                <option value="youtube">YouTube</option>
+                                <option value="twitch">Twitch</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="twitter">Twitter</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Device</label>
+                            <select id="filter-device" class="form-input">
+                                <option value="">All Devices</option>
+                                <option value="desktop">Desktop</option>
+                                <option value="mobile">Mobile</option>
+                                <option value="tablet">Tablet</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Conversions</label>
+                            <input id="filter-conversions" type="number" class="form-input" placeholder="Min conversions" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Clicks</label>
+                            <input id="filter-clicks" type="number" class="form-input" placeholder="Min clicks" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Number of Sign Ups</label>
+                            <input id="filter-signups" type="number" class="form-input" placeholder="Min sign ups" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Creator Category</label>
+                            <select id="filter-category" class="form-input">
+                                <option value="">All Categories</option>
+                                <option value="elite">Elite</option>
+                                <option value="pro">Pro</option>
+                                <option value="beginner">Beginner</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                        <button class="btn btn-primary" onclick="applyFilters()">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                        <button class="btn btn-outline" onclick="resetFilters()">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+
                 <div class="card">
                     <h3>Platform Analytics</h3>
                     <canvas id="platformChart" style="max-height: 400px; margin-top: 15px;"></canvas>
@@ -420,7 +548,7 @@
                         <div style="margin-top: 1rem;">
                             <div style="margin-bottom: 1rem;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                    <span>Cyber Energy</span>
+                                    <span>Product Campaign</span>
                                     <span style="font-weight: 600;">$45,200</span>
                                 </div>
                                 <div class="progress-bar-bg">

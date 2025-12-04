@@ -1,3 +1,18 @@
+// Login Functions (Prototype - no validation)
+function handleSocialLogin(provider) {
+    // Show dashboard, hide login
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('dashboard-container').classList.remove('hidden');
+    setTimeout(initCharts, 100);
+}
+
+function handleEmailLogin() {
+    // Show dashboard, hide login
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('dashboard-container').classList.remove('hidden');
+    setTimeout(initCharts, 100);
+}
+
 // Navigation
 function showTab(tabId, element) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
@@ -27,14 +42,24 @@ function toggleSidebar() {
 
 function logout() {
     if (confirm('Are you sure you want to sign out?')) {
-        window.location.href = 'index.html';
+        // Show login, hide dashboard
+        document.getElementById('login-screen').classList.remove('hidden');
+        document.getElementById('dashboard-container').classList.add('hidden');
     }
 }
 
 // Charts
 function initCharts() {
+    // Check if charts elements exist
+    const revenueChartEl = document.getElementById('revenueChart');
+    const platformChartEl = document.getElementById('platformChart');
+    
+    if (!revenueChartEl || !platformChartEl) {
+        return; // Charts not ready yet
+    }
+
     // Revenue Chart
-    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    const revenueCtx = revenueChartEl.getContext('2d');
     const revenueGradient = revenueCtx.createLinearGradient(0, 0, 0, 300);
     revenueGradient.addColorStop(0, 'rgba(196, 30, 30, 0.4)');
     revenueGradient.addColorStop(1, 'rgba(196, 30, 30, 0)');
@@ -62,18 +87,35 @@ function initCharts() {
             scales: {
                 y: {
                     grid: { color: '#2a2a2a' },
-                    ticks: { color: '#888888' }
+                    ticks: { 
+                        color: '#888888',
+                        font: { size: 11 },
+                        callback: function(value) {
+                            return (value / 1000) + 'K';
+                        }
+                    }
                 },
                 x: {
                     grid: { display: false },
-                    ticks: { color: '#888888' }
+                    ticks: { 
+                        color: '#888888',
+                        font: { size: 11 }
+                    }
+                }
+            },
+            layout: {
+                padding: {
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    right: 10
                 }
             }
         }
     });
 
     // Platform Chart
-    const platformCtx = document.getElementById('platformChart').getContext('2d');
+    const platformCtx = platformChartEl.getContext('2d');
     new Chart(platformCtx, {
         type: 'bar',
         data: {
@@ -105,6 +147,43 @@ function initCharts() {
     });
 }
 
-// Initialize on load
-window.addEventListener('DOMContentLoaded', initCharts);
+// Filter Functions
+function applyFilters() {
+    const filters = {
+        creator: document.getElementById('filter-creator')?.value || '',
+        game: document.getElementById('filter-game')?.value || '',
+        country: document.getElementById('filter-country')?.value || '',
+        channel: document.getElementById('filter-channel')?.value || '',
+        device: document.getElementById('filter-device')?.value || '',
+        conversions: document.getElementById('filter-conversions')?.value || '',
+        clicks: document.getElementById('filter-clicks')?.value || '',
+        signUps: document.getElementById('filter-signups')?.value || '',
+        category: document.getElementById('filter-category')?.value || ''
+    };
 
+    console.log('Applying filters:', filters);
+    // Here you would typically make an API call or filter the data
+    // For now, we'll just show a message
+    alert('Filters applied! (This is a demo - implement your filtering logic here)');
+}
+
+function resetFilters() {
+    document.getElementById('filter-creator').value = '';
+    document.getElementById('filter-game').value = '';
+    document.getElementById('filter-country').value = '';
+    document.getElementById('filter-channel').value = '';
+    document.getElementById('filter-device').value = '';
+    document.getElementById('filter-conversions').value = '';
+    document.getElementById('filter-clicks').value = '';
+    document.getElementById('filter-signups').value = '';
+    document.getElementById('filter-category').value = '';
+    
+    console.log('Filters reset');
+    // Here you would reload the original data
+    alert('Filters reset!');
+}
+
+// Initialize on load - only init charts when dashboard is visible
+window.addEventListener('DOMContentLoaded', function() {
+    // Charts will be initialized when user logs in
+});
